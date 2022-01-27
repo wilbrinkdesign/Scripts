@@ -11,16 +11,12 @@
     Modified: 27-1-2022
 #>
 
-# Globale vars die je in de verschillende functies kunt gebruiken
-$global:PadProject = "D:\OneDrive\Wilbrink Design\Projects"
-$global:PadProjectLaatstBekend = (Get-ChildItem -Path $PadProject -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
-$global:PadLogoGuide = "D:\OneDrive\Wilbrink Design\Guides\Logo guide.pdf"
-$global:PadLogoGids = "D:\OneDrive\Wilbrink Design\Guides\Logo gids.pdf"
-
 Function Project-Start
 {
-    Clear-Host
-    
+    $PadProject = "D:\OneDrive\Wilbrink Design\Projects"
+    $PadLogoGuide = "D:\OneDrive\Wilbrink Design\Guides\Logo guide.pdf"
+    $PadLogoGids = "D:\OneDrive\Wilbrink Design\Guides\Logo gids.pdf"
+
     # Controleer op de projecten folder bestaat
     If (!(Test-Path -Path $PadProject -ErrorAction SilentlyContinue))
     {
@@ -177,8 +173,8 @@ Function Project-Start
 
 Function Project-CopyFiles
 {
-    Clear-Host
-    
+    $PadProjectLaatstBekend = (Get-ChildItem -Path $PadProject -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+
     # Bekijk of er een laatste project bekend is en we die kunnen gebruiken, en vraag ook naar het pad of er een ander project geselecteerd moet worden
     If ($PadProjectLaatstBekend) { Write-Host "Laatst bekende project: $PadProjectLaatstBekend" -ForegroundColor Yellow -BackgroundColor Black }
     If ($PadProjectLaatstBekend) { Write-Host "" }
@@ -240,8 +236,8 @@ Function Project-CopyFiles
 
 Function Project-RenameFiles
 {
-    Clear-Host
-    
+    $PadProjectLaatstBekend = (Get-ChildItem -Path $PadProject -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+
     # Bekijk of er een laatste project bekend is en we die kunnen gebruiken, en vraag ook naar het pad of er een ander project geselecteerd moet worden
     If ($PadProjectLaatstBekend) { Write-Host "Laatst bekende project: $PadProjectLaatstBekend" -ForegroundColor Yellow -BackgroundColor Black }
     If ($PadProjectLaatstBekend) { Write-Host "" }
@@ -301,8 +297,8 @@ Function Project-RenameFiles
 
 Function Project-Zip
 {
-    Clear-Host
-    
+    $PadProjectLaatstBekend = (Get-ChildItem -Path $PadProject -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+
     If ($PadProjectLaatstBekend) { Write-Host "Laatst bekende project: $PadProjectLaatstBekend" -ForegroundColor Yellow -BackgroundColor Black }
     If ($PadProjectLaatstBekend) { Write-Host "" }
 
