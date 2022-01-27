@@ -1,21 +1,15 @@
 <#
     .DESCRIPTION
     Dit profile.ps1 script zorgt ervoor dat de functies die hieronder zijn geschreven, meteen beschikbaar
-    worden tijdens het opstarten van PowerShell. Op deze manier kun je gemakkelijk een Fiverr project
-    starten door middel van de mappen structuur aan te maken, handleiding te kopieren, files te hernoemen
-    en door uiteindelijk .ZIP files van je project te maken.
+    worden tijdens het opstarten van PowerShell. Op deze manier kun je gemakkelijk een logo of website
+    project starten. Dit script maakt de mappenstructuur aan, hernoemd logo files, kopieert logo files en
+    zipt uiteindelijk het hele project, zodat het in 1x door kan naar de klant.
     
     .NOTES
     Author:   Mark Wilbrink
     Created:  16-1-2022
-    Modified: 20-1-2022
+    Modified: 24-1-2022
 #>
-
-# Aliassen instellen zodat je niet de hele functie naam hoeft op te geven
-Set-Alias -Name fs -Value Fiverr-StartProject
-Set-Alias -Name fk -Value Fiverr-KopieerFiles
-Set-Alias -Name fh -Value Fiverr-LogoFilesHernoemen
-Set-Alias -Name fz -Value Fiverr-ZipFileAanmaken
 
 # Globale vars die je in de verschillende functies kunt gebruiken
 $global:PadProject = "D:\OneDrive\Wilbrink Design\Projects"
@@ -23,7 +17,7 @@ $global:PadProjectLaatstBekend = (Get-ChildItem -Path $PadProject -ErrorAction S
 $global:PadLogoGuide = "D:\OneDrive\Wilbrink Design\Guides\Logo guide.pdf"
 $global:PadLogoGids = "D:\OneDrive\Wilbrink Design\Guides\Logo gids.pdf"
 
-Function Fiverr-StartProject
+Function Project-Start
 {
     Clear-Host
     
@@ -34,7 +28,10 @@ Function Fiverr-StartProject
         Break
     }
 
-    $ProjectNaam = Read-Host "Geef de naam van het project"
+    Do { $SoortProject = Read-Host "Wordt dit een Logo project of een Website project? Kies: Logo / Website" } While ( $SoortProject -notmatch "Logo|Website" )
+    Write-Host ""    
+
+    Do { $ProjectNaam = Read-Host "Geef de naam van het project" } While ( $ProjectNaam -eq "" )
     Write-Host ""
 
     # Controleer of er niet al eens eerder een project gestart is onder dezelfde naam
@@ -51,62 +48,80 @@ Function Fiverr-StartProject
         }
     }
 
-    Do { $Taal = Read-Host "Wat wordt de taal van het project? nl of en" } While ( $Taal -notmatch "nl|en" )
-    Write-Host ""
-
-    # Controleer of de handleiding bestaat
-    If ($Taal -eq "en")
+    If ($SoortProject -eq "Logo")
     {
-        If (!(Test-Path -Path $PadLogoGuide -ErrorAction SilentlyContinue))
-        {
-            Write-Host "Handleiding niet gevonden: $PadLogoGuide" -ForegroundColor Red
-            Write-Host ""
-            Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "Ja|Nee")
-            Write-Host ""
+        Do { $Taal = Read-Host "Wat wordt de taal van het project? Kies: nl / en" } While ( $Taal -notmatch "nl|en" )
+        Write-Host ""
 
-            If ($Doorgaan -eq "Nee")
+        # Controleer of de handleiding bestaat
+        If ($Taal -eq "en")
+        {
+            If (!(Test-Path -Path $PadLogoGuide -ErrorAction SilentlyContinue))
             {
-                Break
+                Write-Host "Handleiding niet gevonden: $PadLogoGuide" -ForegroundColor Red
+                Write-Host ""
+                Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "Ja|Nee")
+                Write-Host ""
+
+                If ($Doorgaan -eq "Nee")
+                {
+                    Break
+                }
             }
         }
-    }
-    ElseIf ($Taal -eq "nl")
-    {
-        If (!(Test-Path -Path $PadLogoGids -ErrorAction SilentlyContinue))
+        ElseIf ($Taal -eq "nl")
         {
-            Write-Host "Handleiding niet gevonden: $PadLogoGids" -ForegroundColor Red
-            Write-Host ""
-            Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "Ja|Nee")
-            Write-Host ""
-
-            If ($Doorgaan -eq "Nee")
+            If (!(Test-Path -Path $PadLogoGids -ErrorAction SilentlyContinue))
             {
-                Break
+                Write-Host "Handleiding niet gevonden: $PadLogoGids" -ForegroundColor Red
+                Write-Host ""
+                Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "Ja|Nee")
+                Write-Host ""
+
+                If ($Doorgaan -eq "Nee")
+                {
+                    Break
+                }
             }
         }
     }
     
-    # Verschillende extensies die bij de verschillende kleurmodussen horen
-    $Extensies = @{
-        "Digital" = @("AI", "EPS", "PDF", "JPEG", "PNG", "SVG")
-        "Print" = @("AI", "EPS", "PDF")
-    }
-
-    # Mappen structuur aanmaken
-    Foreach ($Mode in $Extensies.GetEnumerator())
+    If ($SoortProject -eq "Logo")
     {
-        Foreach ($Ext in $Mode.Value)
+        # Verschillende extensies die bij de verschillende kleurmodussen horen
+        $Extensies = @{
+            "Digital" = @("AI", "EPS", "PDF", "JPEG", "PNG", "SVG")
+            "Print" = @("AI", "EPS", "PDF")
+        }
+
+        # Mappen structuur aanmaken
+        Foreach ($Mode in $Extensies.GetEnumerator())
         {
-            If (!(Test-Path -Path "$PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext"))
+            Foreach ($Ext in $Mode.Value)
             {
-                New-Item -Path "$PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ItemType "directory" | Out-Null
-                Write-Host "Map aangemaakt: $PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Green
-            }
-            Else
-            {
-                Write-Host "Map bestond al: $PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Yellow
+                If (!(Test-Path -Path "$PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext"))
+                {
+                    New-Item -Path "$PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ItemType "directory" | Out-Null
+                    Write-Host "Map aangemaakt: $PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Green
+                }
+                Else
+                {
+                    Write-Host "Map bestond al: $PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Yellow
+                }
             }
         }
+    }
+    ElseIf ($SoortProject -eq "Website")
+    {
+        If (!(Test-Path -Path "$PadProject\$ProjectNaam\Website"))
+        {
+            New-Item -Path "$PadProject\$ProjectNaam\Website" -ItemType "directory" | Out-Null
+            Write-Host "Map aangemaakt: $PadProject\$ProjectNaam\Website" -ForegroundColor Green
+        }
+        Else
+        {
+            Write-Host "Map bestond al: $PadProject\$ProjectNaam\Website" -ForegroundColor Yellow
+        }        
     }
 
     # Mockups directory aanmaken
@@ -121,36 +136,46 @@ Function Fiverr-StartProject
     }
 
     # Handleiding kopieren
-    If ($Taal -eq "en")
+    If ($SoortProject -eq "Logo")
     {
-        If (!(Test-Path -Path "$PadProject\$ProjectNaam\Logo\Files\Logo guide.pdf"))
+        If ($Taal -eq "en")
         {
-            Copy-Item -Path $PadLogoGuide -Destination "$PadProject\$ProjectNaam\Logo\Files"
-            Write-Host "Handleiding gekopieerd: $PadProject\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Green
+            If (!(Test-Path -Path "$PadProject\$ProjectNaam\Logo\Files\Logo guide.pdf"))
+            {
+                Copy-Item -Path $PadLogoGuide -Destination "$PadProject\$ProjectNaam\Logo\Files"
+                Write-Host "Handleiding gekopieerd: $PadProject\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Green
+            }
+            Else
+            {
+                Write-Host "Handleiding bestond al: $PadProject\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Yellow
+            }
         }
-        Else
+        ElseIf ($Taal -eq "nl")
         {
-            Write-Host "Handleiding bestond al: $PadProject\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Yellow
-        }
-    }
-    ElseIf ($Taal -eq "nl")
-    {
-        If (!(Test-Path -Path "$PadProject\$ProjectNaam\Logo\Files\Logo gids.pdf"))
-        {
-            Copy-Item -Path $PadLogoGids -Destination "$PadProject\$ProjectNaam\Logo\Files"
-            Write-Host "Handleiding gekopieerd: $PadProject\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Green
-        }
-        Else
-        {
-            Write-Host "Handleiding bestond al: $PadProject\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Yellow
+            If (!(Test-Path -Path "$PadProject\$ProjectNaam\Logo\Files\Logo gids.pdf"))
+            {
+                Copy-Item -Path $PadLogoGids -Destination "$PadProject\$ProjectNaam\Logo\Files"
+                Write-Host "Handleiding gekopieerd: $PadProject\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Green
+            }
+            Else
+            {
+                Write-Host "Handleiding bestond al: $PadProject\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Yellow
+            }
         }
     }
 
     # Start de verkenner en open het project
-    explorer.exe "$PadProject\$ProjectNaam\Logo"
+    If ($SoortProject -eq "Logo")
+    {
+        explorer.exe "$PadProject\$ProjectNaam\Logo"
+    }
+    ElseIf ($SoortProject -eq "Website")
+    {
+        explorer.exe "$PadProject\$ProjectNaam\Website"
+    }
 }
 
-Function Fiverr-KopieerFiles
+Function Project-CopyFiles
 {
     Clear-Host
     
@@ -173,7 +198,7 @@ Function Fiverr-KopieerFiles
     }
     While (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
 
-    Do { $ModeKleur = Read-Host "Wat is de kleur modus van de bestanden? RGB of CMYK" } While ( $ModeKleur -notmatch "RGB|CMYK" )
+    Do { $ModeKleur = Read-Host "Wat is de kleur modus van de bestanden? Kies RGB / CMYK" } While ( $ModeKleur -notmatch "RGB|CMYK" )
     Write-Host ""
 
     # De verschillende extensies en paden die horen bij de verschillende kleur modussen
@@ -213,7 +238,7 @@ Function Fiverr-KopieerFiles
     explorer.exe "$Pad\Logo\Files"
 }
 
-Function Fiverr-LogoFilesHernoemen
+Function Project-RenameFiles
 {
     Clear-Host
     
@@ -274,16 +299,16 @@ Function Fiverr-LogoFilesHernoemen
     explorer.exe "$Pad\Logo\Files"
 }
 
-Function Fiverr-ZipFileAanmaken
+Function Project-Zip
 {
     Clear-Host
     
+    If ($PadProjectLaatstBekend) { Write-Host "Laatst bekende project: $PadProjectLaatstBekend" -ForegroundColor Yellow -BackgroundColor Black }
+    If ($PadProjectLaatstBekend) { Write-Host "" }
+
     # Bekijk of er een laatste project bekend is en we die kunnen gebruiken, en vraag ook naar het pad of er een ander project geselecteerd moet worden
     Do 
     {
-        If ($PadProjectLaatstBekend) { Write-Host "Laatst bekende project: $PadProjectLaatstBekend" -ForegroundColor Yellow -BackgroundColor Black }
-        If ($PadProjectLaatstBekend) { Write-Host "" }
-
         $Pad = Read-Host "Geef het pad op van het project waar een .ZIP file van gemaakt moet worden of enter voor het laatst bekende pad"
         Write-Host ""
         $Pad = If (!$Pad) { $PadProjectLaatstBekend } Else { $Pad -replace '"', "" }
@@ -297,39 +322,68 @@ Function Fiverr-ZipFileAanmaken
     }
     While (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
 
-    # Soorten files die je kunt uploaden in Fiverr
-    $WorkFiles = "JPEG|PNG|SVG"
-    $SourceFiles = "AI|EPS|PDF"
+    Do { $SoortProject = Read-Host "Zip je een Logo project of een Website project? Kies: Logo / Website" } While ( $SoortProject -notmatch "Logo|Website" )
+    Write-Host ""    
 
-    # Test of de logo files bestaan en of het bureaublad niet gevuld is met Source en Work files
-    If ((Test-Path -Path "$Pad\Logo\Files"))
+    If ($SoortProject -eq "Logo")
     {
-        If (!(Test-Path -Path "$([Environment]::GetFolderPath("Desktop"))\Source files") -and !(Test-Path -Path "$([Environment]::GetFolderPath("Desktop"))\Work files"))
-        {
-            # Maak een .ZIP file van de logos voor Work files
-            Copy-Item -Path "$Pad\Logo\Files" -Destination "$([Environment]::GetFolderPath("Desktop"))\Work files" -Recurse
-            Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Work files" -Recurse | where { $_.Attributes -eq "Directory" -and $_.BaseName -match $SourceFiles } | Remove-Item -Recurse -Force
-            Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Work files" | Compress-Archive -DestinationPath "$([Environment]::GetFolderPath("Desktop"))\Work files.zip" -Force
-            Remove-Item -Path "$([Environment]::GetFolderPath("Desktop"))\Work files" -Recurse -Force
-            Write-Host "Work files gezipt: $([Environment]::GetFolderPath("Desktop"))\Work files.zip" -ForegroundColor Green
+        # Soorten files die je kunt uploaden in Fiverr
+        $WorkFiles = "JPEG|PNG|SVG"
+        $SourceFiles = "AI|EPS|PDF"
 
-            # Maak een .zip file van de logos voor Source files
-            Copy-Item -Path "$Pad\Logo\Files" -Destination "$([Environment]::GetFolderPath("Desktop"))\Source files" -Recurse
-            Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Source files" -Recurse | where { $_.Attributes -eq "Directory" -and $_.BaseName -match $WorkFiles } | Remove-Item -Recurse -Force
-            Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Source files" | Compress-Archive -DestinationPath "$([Environment]::GetFolderPath("Desktop"))\Source files.zip" -Force
-            Remove-Item -Path "$([Environment]::GetFolderPath("Desktop"))\Source files" -Recurse -Force
-            Write-Host "Source files gezipt: $([Environment]::GetFolderPath("Desktop"))\Source files.zip" -ForegroundColor Green
+        # Test of de logo files bestaan en of het bureaublad niet gevuld is met Source en Work files
+        If ((Test-Path -Path "$Pad\Logo\Files"))
+        {
+            If (!(Test-Path -Path "$([Environment]::GetFolderPath("Desktop"))\Source files") -and !(Test-Path -Path "$([Environment]::GetFolderPath("Desktop"))\Work files"))
+            {
+                # Maak een .ZIP file van de logos voor Work files
+                Copy-Item -Path "$Pad\Logo\Files" -Destination "$([Environment]::GetFolderPath("Desktop"))\Work files" -Recurse
+                Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Work files" -Recurse | where { $_.Attributes -eq "Directory" -and $_.BaseName -match $SourceFiles } | Remove-Item -Recurse -Force
+                Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Work files" | Compress-Archive -DestinationPath "$([Environment]::GetFolderPath("Desktop"))\Work files.zip" -Force
+                Remove-Item -Path "$([Environment]::GetFolderPath("Desktop"))\Work files" -Recurse -Force
+                Write-Host "Work files gezipt: $([Environment]::GetFolderPath("Desktop"))\Work files.zip" -ForegroundColor Green
+
+                # Maak een .zip file van de logos voor Source files
+                Copy-Item -Path "$Pad\Logo\Files" -Destination "$([Environment]::GetFolderPath("Desktop"))\Source files" -Recurse
+                Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Source files" -Recurse | where { $_.Attributes -eq "Directory" -and $_.BaseName -match $WorkFiles } | Remove-Item -Recurse -Force
+                Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Source files" | Compress-Archive -DestinationPath "$([Environment]::GetFolderPath("Desktop"))\Source files.zip" -Force
+                Remove-Item -Path "$([Environment]::GetFolderPath("Desktop"))\Source files" -Recurse -Force
+                Write-Host "Source files gezipt: $([Environment]::GetFolderPath("Desktop"))\Source files.zip" -ForegroundColor Green
+            }
+            Else
+            {
+                Write-Host "Bureaublad bestanden voor Source/Work files bestaan al" -ForegroundColor Red
+                Break
+            }
         }
         Else
         {
-            Write-Host "Bureaublad bestanden voor Source/Work files bestaan al" -ForegroundColor Red
+            Write-Host "Logo files bestaan niet: $Pad\Logo\Files" -ForegroundColor Red
             Break
         }
     }
-    Else
+    ElseIf ($SoortProject -eq "Website")
     {
-        Write-Host "Logo files bestaan niet: $Pad\Logo\Files" -ForegroundColor Red
-        Break
+        # Test of de website files bestaan en of het bureaublad niet gevuld is met Source files
+        If ((Test-Path -Path "$Pad\Website"))
+        {
+            If (!(Test-Path -Path "$([Environment]::GetFolderPath("Desktop"))\Source files"))
+            {
+                # Maak een .zip file van de website voor Source files
+                Get-ChildItem -Path "$Pad\Website" | Compress-Archive -DestinationPath "$([Environment]::GetFolderPath("Desktop"))\Source files.zip" -Force
+                Write-Host "Source files gezipt: $([Environment]::GetFolderPath("Desktop"))\Source files.zip" -ForegroundColor Green
+            }
+            Else
+            {
+                Write-Host "Bureaublad bestanden voor Source files bestaan al" -ForegroundColor Red
+                Break
+            }
+        }
+        Else
+        {
+            Write-Host "Website files bestaan niet: $Pad\Website" -ForegroundColor Red
+            Break
+        }
     }
 
     # Maak een .zip file van de mockups
