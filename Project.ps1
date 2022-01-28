@@ -8,7 +8,11 @@
     .NOTES
     Author:   Mark Wilbrink
     Created:  16-1-2022
+<<<<<<< HEAD
     Modified: 30-1-2022
+=======
+    Modified: 28-1-2022
+>>>>>>> parent of e56d06f (Merge pull request #1 from wilbrinkdesign/mcolpawsn-patch-1)
 #>
 
 Function Project-Start
