@@ -8,19 +8,23 @@
     .NOTES
     Author:   Mark Wilbrink
     Created:  16-1-2022
-    Modified: 30-1-2022
+    Modified: 28-1-2022
 #>
+
+# Globale vars die je in elke functie kunt aanroepen
+$global:PadProjecten = "D:\OneDrive\Wilbrink Design\Projects"
 
 Function Project-Start
 {
-    $PadProject = "D:\OneDrive\Wilbrink Design\Projects"
+    Clear-Host
+
     $PadLogoGuide = "D:\OneDrive\Wilbrink Design\Guides\Logo guide.pdf"
     $PadLogoGids = "D:\OneDrive\Wilbrink Design\Guides\Logo gids.pdf"
 
     # Controleer op de projecten folder bestaat
-    If (!(Test-Path -Path $PadProject -ErrorAction SilentlyContinue))
+    If (!(Test-Path -Path $PadProjecten -ErrorAction SilentlyContinue))
     {
-        Write-Host "Projecten folder niet gevonden: $PadProject" -ForegroundColor Red
+        Write-Host "Projecten folder niet gevonden: $PadProjecten" -ForegroundColor Red
         Break
     }
 
@@ -31,9 +35,9 @@ Function Project-Start
     Write-Host ""
 
     # Controleer of er niet al eens eerder een project gestart is onder dezelfde naam
-    If ((Test-Path -Path "$PadProject\$ProjectNaam" -ErrorAction SilentlyContinue))
+    If ((Test-Path -Path "$PadProjecten\$ProjectNaam" -ErrorAction SilentlyContinue))
     {
-        Write-Host "Project folder bestaat al: $PadProject\$ProjectNaam" -ForegroundColor Red
+        Write-Host "Project folder bestaat al: $PadProjecten\$ProjectNaam" -ForegroundColor Red
         Write-Host ""
         Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "Ja|Nee")
         Write-Host ""
@@ -86,7 +90,7 @@ Function Project-Start
     {
         # Verschillende extensies die bij de verschillende kleurmodussen horen
         $Extensies = @{
-            "Digital" = @("AI", "EPS", "PDF", "JPEG", "PNG", "SVG")
+            "Digital" = @("JPEG", "PNG", "SVG")
             "Print" = @("AI", "EPS", "PDF")
         }
 
@@ -95,40 +99,40 @@ Function Project-Start
         {
             Foreach ($Ext in $Mode.Value)
             {
-                If (!(Test-Path -Path "$PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext"))
+                If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext"))
                 {
-                    New-Item -Path "$PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ItemType "directory" | Out-Null
-                    Write-Host "Map aangemaakt: $PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Green
+                    New-Item -Path "$PadProjecten\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ItemType "directory" | Out-Null
+                    Write-Host "Map aangemaakt: $PadProjecten\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Green
                 }
                 Else
                 {
-                    Write-Host "Map bestond al: $PadProject\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Yellow
+                    Write-Host "Map bestond al: $PadProjecten\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Yellow
                 }
             }
         }
     }
     ElseIf ($SoortProject -eq "Website")
     {
-        If (!(Test-Path -Path "$PadProject\$ProjectNaam\Website"))
+        If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Website"))
         {
-            New-Item -Path "$PadProject\$ProjectNaam\Website" -ItemType "directory" | Out-Null
-            Write-Host "Map aangemaakt: $PadProject\$ProjectNaam\Website" -ForegroundColor Green
+            New-Item -Path "$PadProjecten\$ProjectNaam\Website" -ItemType "directory" | Out-Null
+            Write-Host "Map aangemaakt: $PadProjecten\$ProjectNaam\Website" -ForegroundColor Green
         }
         Else
         {
-            Write-Host "Map bestond al: $PadProject\$ProjectNaam\Website" -ForegroundColor Yellow
+            Write-Host "Map bestond al: $PadProjecten\$ProjectNaam\Website" -ForegroundColor Yellow
         }        
     }
 
     # Mockups directory aanmaken
-    If (!(Test-Path -Path "$PadProject\$ProjectNaam\Mockups"))
+    If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Mockups"))
     {
-        New-Item -Path "$PadProject\$ProjectNaam\Mockups" -ItemType "directory" | Out-Null
-        Write-Host "Map aangemaakt: $PadProject\$ProjectNaam\Mockups" -ForegroundColor Green
+        New-Item -Path "$PadProjecten\$ProjectNaam\Mockups" -ItemType "directory" | Out-Null
+        Write-Host "Map aangemaakt: $PadProjecten\$ProjectNaam\Mockups" -ForegroundColor Green
     }
     Else
     {
-        Write-Host "Map bestond al: $PadProject\$ProjectNaam\Mockups" -ForegroundColor Yellow
+        Write-Host "Map bestond al: $PadProjecten\$ProjectNaam\Mockups" -ForegroundColor Yellow
     }
 
     # Handleiding kopieren
@@ -136,26 +140,26 @@ Function Project-Start
     {
         If ($Taal -eq "en")
         {
-            If (!(Test-Path -Path "$PadProject\$ProjectNaam\Logo\Files\Logo guide.pdf"))
+            If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Logo\Files\Logo guide.pdf"))
             {
-                Copy-Item -Path $PadLogoGuide -Destination "$PadProject\$ProjectNaam\Logo\Files"
-                Write-Host "Handleiding gekopieerd: $PadProject\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Green
+                Copy-Item -Path $PadLogoGuide -Destination "$PadProjecten\$ProjectNaam\Logo\Files"
+                Write-Host "Handleiding gekopieerd: $PadProjecten\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Green
             }
             Else
             {
-                Write-Host "Handleiding bestond al: $PadProject\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Yellow
+                Write-Host "Handleiding bestond al: $PadProjecten\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Yellow
             }
         }
         ElseIf ($Taal -eq "nl")
         {
-            If (!(Test-Path -Path "$PadProject\$ProjectNaam\Logo\Files\Logo gids.pdf"))
+            If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Logo\Files\Logo gids.pdf"))
             {
-                Copy-Item -Path $PadLogoGids -Destination "$PadProject\$ProjectNaam\Logo\Files"
-                Write-Host "Handleiding gekopieerd: $PadProject\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Green
+                Copy-Item -Path $PadLogoGids -Destination "$PadProjecten\$ProjectNaam\Logo\Files"
+                Write-Host "Handleiding gekopieerd: $PadProjecten\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Green
             }
             Else
             {
-                Write-Host "Handleiding bestond al: $PadProject\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Yellow
+                Write-Host "Handleiding bestond al: $PadProjecten\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Yellow
             }
         }
     }
@@ -163,27 +167,29 @@ Function Project-Start
     # Start de verkenner en open het project
     If ($SoortProject -eq "Logo")
     {
-        explorer.exe "$PadProject\$ProjectNaam\Logo"
+        explorer.exe "$PadProjecten\$ProjectNaam\Logo"
     }
     ElseIf ($SoortProject -eq "Website")
     {
-        explorer.exe "$PadProject\$ProjectNaam\Website"
+        explorer.exe "$PadProjecten\$ProjectNaam\Website"
     }
 }
 
 Function Project-CopyFiles
 {
-    $PadProjectLaatstBekend = (Get-ChildItem -Path $PadProject -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+    Clear-Host
 
+    $PadLaatsteProject = (Get-ChildItem -Path $PadProjecten -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+    
     # Bekijk of er een laatste project bekend is en we die kunnen gebruiken, en vraag ook naar het pad of er een ander project geselecteerd moet worden
-    If ($PadProjectLaatstBekend) { Write-Host "Laatst bekende project: $PadProjectLaatstBekend" -ForegroundColor Yellow -BackgroundColor Black }
-    If ($PadProjectLaatstBekend) { Write-Host "" }
+    If ($PadLaatsteProject) { Write-Host "Laatst bekende project: $PadLaatsteProject" -ForegroundColor Yellow -BackgroundColor Black }
+    If ($PadLaatsteProject) { Write-Host "" }
 
     Do 
     {
         $Pad = Read-Host "Geef het pad op van het project waar de bestanden op het bureaublad naartoe moeten worden gekopieerd of enter voor het laatst bekende pad"
         Write-Host ""
-        $Pad = If (!$Pad) { $PadProjectLaatstBekend } Else { $Pad -replace '"', "" }
+        $Pad = If (!$Pad) { $PadLaatsteProject } Else { $Pad -replace '"', "" }
         $Pad = If (!$Pad) { "Laatst bekende pad was onbekend" } Else { $Pad }
 
         If (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
@@ -201,9 +207,6 @@ Function Project-CopyFiles
     If ($ModeKleur -eq "RGB")
     {
         $ExtensiesEnPaden = @{
-            "AI" = "$Pad\Logo\Files\Digital\AI"
-            "EPS" = "$Pad\Logo\Files\Digital\EPS"
-            "PDF" = "$Pad\Logo\Files\Digital\PDF"
             "JPG" = "$Pad\Logo\Files\Digital\JPEG"
             "PNG" = "$Pad\Logo\Files\Digital\PNG"
             "SVG" = "$Pad\Logo\Files\Digital\SVG"
@@ -236,17 +239,19 @@ Function Project-CopyFiles
 
 Function Project-RenameFiles
 {
-    $PadProjectLaatstBekend = (Get-ChildItem -Path $PadProject -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+    Clear-Host
 
+    $PadLaatsteProject = (Get-ChildItem -Path $PadProjecten -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+    
     # Bekijk of er een laatste project bekend is en we die kunnen gebruiken, en vraag ook naar het pad of er een ander project geselecteerd moet worden
-    If ($PadProjectLaatstBekend) { Write-Host "Laatst bekende project: $PadProjectLaatstBekend" -ForegroundColor Yellow -BackgroundColor Black }
-    If ($PadProjectLaatstBekend) { Write-Host "" }
+    If ($PadLaatsteProject) { Write-Host "Laatst bekende project: $PadLaatsteProject" -ForegroundColor Yellow -BackgroundColor Black }
+    If ($PadLaatsteProject) { Write-Host "" }
 
     Do 
     {
         $Pad = Read-Host "Geef het pad op van het project waarvan de logo files hernoemd moeten worden of enter voor het laatst bekende pad"
         Write-Host ""
-        $Pad = If (!$Pad) { $PadProjectLaatstBekend } Else { $Pad -replace '"', "" }
+        $Pad = If (!$Pad) { $PadLaatsteProject } Else { $Pad -replace '"', "" }
         $Pad = If (!$Pad) { "Laatst bekende pad was onbekend" } Else { $Pad }
 
         If (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
@@ -297,17 +302,19 @@ Function Project-RenameFiles
 
 Function Project-Zip
 {
-    $PadProjectLaatstBekend = (Get-ChildItem -Path $PadProject -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+    Clear-Host
 
-    If ($PadProjectLaatstBekend) { Write-Host "Laatst bekende project: $PadProjectLaatstBekend" -ForegroundColor Yellow -BackgroundColor Black }
-    If ($PadProjectLaatstBekend) { Write-Host "" }
+    $PadLaatsteProject = (Get-ChildItem -Path $PadProjecten -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+    
+    If ($PadLaatsteProject) { Write-Host "Laatst bekende project: $PadLaatsteProject" -ForegroundColor Yellow -BackgroundColor Black }
+    If ($PadLaatsteProject) { Write-Host "" }
 
     # Bekijk of er een laatste project bekend is en we die kunnen gebruiken, en vraag ook naar het pad of er een ander project geselecteerd moet worden
     Do 
     {
         $Pad = Read-Host "Geef het pad op van het project waar een .ZIP file van gemaakt moet worden of enter voor het laatst bekende pad"
         Write-Host ""
-        $Pad = If (!$Pad) { $PadProjectLaatstBekend } Else { $Pad -replace '"', "" }
+        $Pad = If (!$Pad) { $PadLaatsteProject } Else { $Pad -replace '"', "" }
         $Pad = If (!$Pad) { "Laatst bekende pad was onbekend" } Else { $Pad }
 
         If (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
