@@ -8,7 +8,7 @@
     .NOTES
     Author:   Mark Wilbrink
     Created:  16-1-2022
-    Modified: 28-1-2022
+    Modified: 30-1-2022
 #>
 
 # Globale vars die je in elke functie kunt aanroepen
@@ -18,8 +18,8 @@ Function Project-Start
 {
     Clear-Host
 
-    $PadLogoGuide = "D:\OneDrive\Wilbrink Design\Guides\Logo guide.pdf"
-    $PadLogoGids = "D:\OneDrive\Wilbrink Design\Guides\Logo gids.pdf"
+    $PadLogoGuide = "D:\OneDrive\Wilbrink Design\Documents\Logo guide.pdf"
+    $PadLogoGids = "D:\OneDrive\Wilbrink Design\Documents\Logo gids.pdf"
 
     # Controleer op de projecten folder bestaat
     If (!(Test-Path -Path $PadProjecten -ErrorAction SilentlyContinue))
