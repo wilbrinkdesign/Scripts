@@ -8,7 +8,7 @@
     .NOTES
     Author:   Mark Wilbrink
     Created:  16-1-2022
-    Modified: 30-1-2022
+    Modified: 31-1-2022
 #>
 
 # Globale vars die je in elke functie kunt aanroepen
@@ -18,23 +18,26 @@ Function Project-Start
 {
     Clear-Host
 
+    # Paden handleidingen
     $PadLogoGuide = "D:\OneDrive\Wilbrink Design\Documents\Logo guide.pdf"
     $PadLogoGids = "D:\OneDrive\Wilbrink Design\Documents\Logo gids.pdf"
 
-    # Controleer op de projecten folder bestaat
+    # Controleren of het projecten pad uberhaupt bestaat, anders dit script niet verder starten
     If (!(Test-Path -Path $PadProjecten -ErrorAction SilentlyContinue))
     {
         Write-Host "Projecten folder niet gevonden: $PadProjecten" -ForegroundColor Red
         Break
     }
 
+    # We hebben verschillende projecten, kies hier het type
     Do { $SoortProject = Read-Host "Wordt dit een Logo project of een Website project? Kies: Logo / Website" } While ( $SoortProject -notmatch "Logo|Website" )
     Write-Host ""    
 
+    # Naam van het project, dit wordt ook de folder naam
     Do { $ProjectNaam = Read-Host "Geef de naam van het project" } While ( $ProjectNaam -eq "" )
     Write-Host ""
 
-    # Controleer of er niet al eens eerder een project gestart is onder dezelfde naam
+    # Controleren of het project niet al eens eerder is aangemaakt
     If ((Test-Path -Path "$PadProjecten\$ProjectNaam" -ErrorAction SilentlyContinue))
     {
         Write-Host "Project folder bestaat al: $PadProjecten\$ProjectNaam" -ForegroundColor Red
@@ -48,12 +51,31 @@ Function Project-Start
         }
     }
 
+    # Logo en website zaken in orde maken
     If ($SoortProject -eq "Logo")
     {
+        # Taal van het project i.v.m. de logo handleiding
         Do { $Taal = Read-Host "Wat wordt de taal van het project? Kies: nl / en" } While ( $Taal -notmatch "nl|en" )
         Write-Host ""
 
-        # Controleer of de handleiding bestaat
+        # Verschillende extensies die we gebruiken om de folders mee aan te maken
+        $Extensies = @("AI", "EPS", "PDF", "SVG", "PNG", "JPEG")
+
+        # Maak de mappenstructuur aan voor het logo
+        Foreach ($Extensie in $Extensies)
+        {
+            If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Logo\Files\$Extensie"))
+            {
+                New-Item -Path "$PadProjecten\$ProjectNaam\Logo\Files\$Extensie" -ItemType "directory" | Out-Null
+                Write-Host "Map aangemaakt: $PadProjecten\$ProjectNaam\Logo\Files\$Extensie" -ForegroundColor Green
+            }
+            Else
+            {
+                Write-Host "Map bestond al: $PadProjecten\$ProjectNaam\Logo\Files\$Extensie" -ForegroundColor Yellow
+            }
+        }
+
+        # Taal = Engels, controleer of de handleiding gevonden kan worden, zo ja, kopieer het naar de juiste locatie
         If ($Taal -eq "en")
         {
             If (!(Test-Path -Path $PadLogoGuide -ErrorAction SilentlyContinue))
@@ -68,7 +90,13 @@ Function Project-Start
                     Break
                 }
             }
+            Else
+            {
+                Copy-Item -Path $PadLogoGuide -Destination "$PadProjecten\$ProjectNaam\Logo\Files"
+                Write-Host "Handleiding gekopieerd: $PadProjecten\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Green
+            }
         }
+        # Taal = Nederlands, controleer of de handleiding gevonden kan worden, zo ja, kopieer het naar de juiste locatie
         ElseIf ($Taal -eq "nl")
         {
             If (!(Test-Path -Path $PadLogoGids -ErrorAction SilentlyContinue))
@@ -83,34 +111,17 @@ Function Project-Start
                     Break
                 }
             }
-        }
-    }
-    
-    If ($SoortProject -eq "Logo")
-    {
-        # Verschillende extensies die bij de verschillende kleurmodussen horen
-        $Extensies = @{
-            "Digital" = @("JPEG", "PNG", "SVG")
-            "Print" = @("AI", "EPS", "PDF")
-        }
-
-        # Mappen structuur aanmaken
-        Foreach ($Mode in $Extensies.GetEnumerator())
-        {
-            Foreach ($Ext in $Mode.Value)
+            Else
             {
-                If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext"))
-                {
-                    New-Item -Path "$PadProjecten\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ItemType "directory" | Out-Null
-                    Write-Host "Map aangemaakt: $PadProjecten\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Green
-                }
-                Else
-                {
-                    Write-Host "Map bestond al: $PadProjecten\$ProjectNaam\Logo\Files\$($Mode.Name)\$Ext" -ForegroundColor Yellow
-                }
+                Copy-Item -Path $PadLogoGids -Destination "$PadProjecten\$ProjectNaam\Logo\Files"
+                Write-Host "Handleiding gekopieerd: $PadProjecten\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Green
             }
         }
+
+        # Start de verkenner en open het project
+        explorer.exe "$PadProjecten\$ProjectNaam\Logo"
     }
+    # Maak de map aan voor de website
     ElseIf ($SoortProject -eq "Website")
     {
         If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Website"))
@@ -122,9 +133,12 @@ Function Project-Start
         {
             Write-Host "Map bestond al: $PadProjecten\$ProjectNaam\Website" -ForegroundColor Yellow
         }        
+
+        # Start de verkenner en open het project
+        explorer.exe "$PadProjecten\$ProjectNaam\Website"
     }
 
-    # Mockups directory aanmaken
+    # Map aanmaken voor de mockups
     If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Mockups"))
     {
         New-Item -Path "$PadProjecten\$ProjectNaam\Mockups" -ItemType "directory" | Out-Null
@@ -133,45 +147,6 @@ Function Project-Start
     Else
     {
         Write-Host "Map bestond al: $PadProjecten\$ProjectNaam\Mockups" -ForegroundColor Yellow
-    }
-
-    # Handleiding kopieren
-    If ($SoortProject -eq "Logo")
-    {
-        If ($Taal -eq "en")
-        {
-            If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Logo\Files\Logo guide.pdf"))
-            {
-                Copy-Item -Path $PadLogoGuide -Destination "$PadProjecten\$ProjectNaam\Logo\Files"
-                Write-Host "Handleiding gekopieerd: $PadProjecten\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Green
-            }
-            Else
-            {
-                Write-Host "Handleiding bestond al: $PadProjecten\$ProjectNaam\Logo\Files\Logo guide.pdf" -ForegroundColor Yellow
-            }
-        }
-        ElseIf ($Taal -eq "nl")
-        {
-            If (!(Test-Path -Path "$PadProjecten\$ProjectNaam\Logo\Files\Logo gids.pdf"))
-            {
-                Copy-Item -Path $PadLogoGids -Destination "$PadProjecten\$ProjectNaam\Logo\Files"
-                Write-Host "Handleiding gekopieerd: $PadProjecten\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Green
-            }
-            Else
-            {
-                Write-Host "Handleiding bestond al: $PadProjecten\$ProjectNaam\Logo\Files\Logo gids.pdf" -ForegroundColor Yellow
-            }
-        }
-    }
-
-    # Start de verkenner en open het project
-    If ($SoortProject -eq "Logo")
-    {
-        explorer.exe "$PadProjecten\$ProjectNaam\Logo"
-    }
-    ElseIf ($SoortProject -eq "Website")
-    {
-        explorer.exe "$PadProjecten\$ProjectNaam\Website"
     }
 }
 
@@ -200,36 +175,30 @@ Function Project-CopyFiles
     }
     While (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
 
-    Do { $ModeKleur = Read-Host "Wat is de kleur modus van de bestanden? Kies RGB / CMYK" } While ( $ModeKleur -notmatch "RGB|CMYK" )
-    Write-Host ""
-
-    # De verschillende extensies en paden die horen bij de verschillende kleur modussen
-    If ($ModeKleur -eq "RGB")
-    {
-        $ExtensiesEnPaden = @{
-            "JPG" = "$Pad\Logo\Files\Digital\JPEG"
-            "PNG" = "$Pad\Logo\Files\Digital\PNG"
-            "SVG" = "$Pad\Logo\Files\Digital\SVG"
-        }
-    }
-    ElseIf ($ModeKleur -eq "CMYK")
-    {
-        $ExtensiesEnPaden = @{
-            "AI" = "$Pad\Logo\Files\Print\AI"
-            "EPS" = "$Pad\Logo\Files\Print\EPS"
-            "PDF" = "$Pad\Logo\Files\Print\PDF"
-        }
+    # De verschillende extensies en paden die horen bij de verschillende kleurmodussen
+    $ExtensiesEnPaden = @{
+        "AI" = "$Pad\Logo\Files\AI"
+        "EPS" = "$Pad\Logo\Files\EPS"
+        "PDF" = "$Pad\Logo\Files\PDF"
+        "SVG" = "$Pad\Logo\Files\SVG"
+        "PNG" = "$Pad\Logo\Files\PNG"
+        "JPG" = "$Pad\Logo\Files\JPEG"
     }
 
-    # Kopieer de bestanden van het bureaublad naar het project, en houdt rekening met de kleur modus en de bijbehorende mappen structuur
-    Foreach ($Ext in $ExtensiesEnPaden.GetEnumerator())
+    # Kopieer de bestanden van het bureaublad naar het project, en houdt rekening met de kleurmodus en de bijbehorende mappen
+    Foreach ($Extensie in $ExtensiesEnPaden.GetEnumerator())
     {
-        $Bestanden = Get-ChildItem "$([Environment]::GetFolderPath("Desktop"))" -Recurse | where { $_.GetType().Name -eq "FileInfo" -and $_.FullName -like "*$($Ext.Name)*" }
+        $Bestanden = Get-ChildItem "$([Environment]::GetFolderPath("Desktop"))" -Recurse | where { $_.GetType().Name -eq "FileInfo" -and $_.FullName -like "*$($Extensie.Name)*" }
 
         Foreach ($Bestand in $Bestanden)
         {
-            $Bestand | Copy-Item -Destination $Ext.Value
-            Write-Host "$ModeKleur bestand gekopieerd: $Bestand => $($Ext.Value)" -ForegroundColor Green
+            $Bestand | Copy-Item -Destination $Extensie.Value
+            Write-Host "Bestand gekopieerd: $Bestand => $($Extensie.Value)" -ForegroundColor Green
+        }
+
+        If (!$Bestanden)
+        {
+            Write-Host "Geen bestanden gevonden voor extensie: $($Extensie.Name)" -ForegroundColor Yellow
         }
     }
 
@@ -262,7 +231,24 @@ Function Project-RenameFiles
     }
     While (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
 
-    $CMYK = Get-ChildItem $Pad -Recurse | where { $_.GetType().Name -eq "FileInfo" -and $_.FullName -like "*Print\*" -and $_.FullName -notlike "*-cmyk*" }
+    Do { $KleurModus = Read-Host "Is dit een CMYK + RGB of een RGB only project? Kies: CMYK / RGB" } While ( $KleurModus -notmatch "CMYK|RGB" )
+    Write-Host ""
+
+    # De verschillende extensies en de kleurmodus die erbij hoort
+    $ExtensiesCMYK = "AI|EPS|PDF"
+    $ExtensiesRGB = "SVG|PNG|JPG"
+
+    If ($KleurModus -eq "CMYK")
+    {
+        # Vraag alle files op in alleen de sub folders
+        $CMYK = Get-ChildItem $Pad\Logo\Files\*\* | where { $_.GetType().Name -eq "FileInfo" -and $_.FullName -match $ExtensiesCMYK -and $_.FullName -notlike "*-cmyk*" }
+        $RGB = Get-ChildItem $Pad\Logo\Files\*\* | where { $_.GetType().Name -eq "FileInfo" -and $_.FullName -match $ExtensiesRGB -and $_.FullName -notlike "*-rgb*" }
+    }
+    ElseIf ($KleurModus -eq "RGB")
+    {
+        # Vraag alle files op in alleen de sub folders
+        $RGB = Get-ChildItem $Pad\Logo\Files\*\* | where { $_.GetType().Name -eq "FileInfo" -and $_.FullName -notlike "*-rgb*" }
+    }
 
     # Hernoem de CMYK bestanden, sloop de prefix eraf en plaats er een suffix op
     If ($CMYK)
@@ -278,8 +264,6 @@ Function Project-RenameFiles
     {
         Write-Host "Print files: De bestanden zijn niet gevonden of de bestanden waren al hernoemd" -ForegroundColor Yellow
     }
-
-    $RGB = Get-ChildItem $Pad -Recurse | where { $_.GetType().Name -eq "FileInfo" -and $_.FullName -like "*Digital\*" -and $_.FullName -notlike "*-rgb*" }
 
     # Hernoem de RGB bestanden, sloop de prefix eraf en plaats er een suffix op
     If ($RGB)
@@ -325,78 +309,61 @@ Function Project-Zip
     }
     While (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
 
-    Do { $SoortProject = Read-Host "Zip je een Logo project of een Website project? Kies: Logo / Website" } While ( $SoortProject -notmatch "Logo|Website" )
-    Write-Host ""    
+    # Tijdelijke folder aanmaken
+    $TempMap = New-Item -Path "$([Environment]::GetFolderPath("Desktop"))\$(Get-Random)" -ItemType "directory"
 
-    If ($SoortProject -eq "Logo")
+    # Test of de logo files bestaan en maak de .ZIP files aan
+    If ((Test-Path -Path "$Pad\Logo\Files"))
     {
-        # Soorten files die je kunt uploaden in Fiverr
-        $WorkFiles = "JPEG|PNG|SVG"
+        # De verschillende .ZIP files met de bijbehorende mappen
+        $WorkFiles = "SVG|PNG|JPEG"
         $SourceFiles = "AI|EPS|PDF"
 
-        # Test of de logo files bestaan en of het bureaublad niet gevuld is met Source en Work files
-        If ((Test-Path -Path "$Pad\Logo\Files"))
-        {
-            If (!(Test-Path -Path "$([Environment]::GetFolderPath("Desktop"))\Source files") -and !(Test-Path -Path "$([Environment]::GetFolderPath("Desktop"))\Work files"))
-            {
-                # Maak een .ZIP file van de logos voor Work files
-                Copy-Item -Path "$Pad\Logo\Files" -Destination "$([Environment]::GetFolderPath("Desktop"))\Work files" -Recurse
-                Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Work files" -Recurse | where { $_.Attributes -eq "Directory" -and $_.BaseName -match $SourceFiles } | Remove-Item -Recurse -Force
-                Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Work files" | Compress-Archive -DestinationPath "$([Environment]::GetFolderPath("Desktop"))\Work files.zip" -Force
-                Remove-Item -Path "$([Environment]::GetFolderPath("Desktop"))\Work files" -Recurse -Force
-                Write-Host "Work files gezipt: $([Environment]::GetFolderPath("Desktop"))\Work files.zip" -ForegroundColor Green
+        # Maak de .ZIP files aan voor Work files en Source files
+        Copy-Item -Path "$Pad\Logo\Files\" -Destination "$(($TempMap).FullName)\Logo\" -Recurse
 
-                # Maak een .zip file van de logos voor Source files
-                Copy-Item -Path "$Pad\Logo\Files" -Destination "$([Environment]::GetFolderPath("Desktop"))\Source files" -Recurse
-                Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Source files" -Recurse | where { $_.Attributes -eq "Directory" -and $_.BaseName -match $WorkFiles } | Remove-Item -Recurse -Force
-                Get-ChildItem -Path "$([Environment]::GetFolderPath("Desktop"))\Source files" | Compress-Archive -DestinationPath "$([Environment]::GetFolderPath("Desktop"))\Source files.zip" -Force
-                Remove-Item -Path "$([Environment]::GetFolderPath("Desktop"))\Source files" -Recurse -Force
-                Write-Host "Source files gezipt: $([Environment]::GetFolderPath("Desktop"))\Source files.zip" -ForegroundColor Green
-            }
-            Else
-            {
-                Write-Host "Bureaublad bestanden voor Source/Work files bestaan al" -ForegroundColor Red
-                Break
-            }
-        }
-        Else
-        {
-            Write-Host "Logo files bestaan niet: $Pad\Logo\Files" -ForegroundColor Red
-            Break
-        }
+        # Maak de .ZIP file aan voor Work files
+        Get-ChildItem "$TempMap\Logo" -Directory | where { $_.FullName -match $WorkFiles } | Compress-Archive -DestinationPath "$TempMap\Logo\Work files.zip" -Force
+        Write-Host "Work files gezipt: $TempMap\Logo\Work files.zip" -ForegroundColor Green
+
+        # Maak de .ZIP file aan voor Source files
+        Get-ChildItem "$TempMap\Logo" -Directory | where { $_.FullName -match $SourceFiles } | Compress-Archive -DestinationPath "$TempMap\Logo\Source files.zip" -Force
+        Write-Host "Source files gezipt: $TempMap\Logo\Source files.zip" -ForegroundColor Green
     }
-    ElseIf ($SoortProject -eq "Website")
+    Else
     {
-        # Test of de website files bestaan en of het bureaublad niet gevuld is met Source files
-        If ((Test-Path -Path "$Pad\Website"))
-        {
-            If (!(Test-Path -Path "$([Environment]::GetFolderPath("Desktop"))\Source files"))
-            {
-                # Maak een .zip file van de website voor Source files
-                Get-ChildItem -Path "$Pad\Website" | Compress-Archive -DestinationPath "$([Environment]::GetFolderPath("Desktop"))\Source files.zip" -Force
-                Write-Host "Source files gezipt: $([Environment]::GetFolderPath("Desktop"))\Source files.zip" -ForegroundColor Green
-            }
-            Else
-            {
-                Write-Host "Bureaublad bestanden voor Source files bestaan al" -ForegroundColor Red
-                Break
-            }
-        }
-        Else
-        {
-            Write-Host "Website files bestaan niet: $Pad\Website" -ForegroundColor Red
-            Break
-        }
+        Write-Host "Logo files bestaan niet: $Pad\Logo\Files" -ForegroundColor Yellow
+        Break
     }
 
-    # Maak een .zip file van de mockups
+    # Test of de website files bestaan en maak een .ZIP file aan
+    If ((Test-Path -Path "$Pad\Website"))
+    {
+        # Maak de folder voor de website files
+        New-Item -Path "$TempMap\Website" -ItemType "directory"
+
+        # Maak de .ZIP file aan voor Source files
+        Get-ChildItem -Path "$Pad\Website" | Compress-Archive -DestinationPath "$TempMap\Website\Source files.zip" -Force
+        Write-Host "Source files gezipt: $TempMap\Source files.zip" -ForegroundColor Green
+    }
+    Else
+    {
+        Write-Host "Website files bestaan niet: $Pad\Website" -ForegroundColor Yellow
+        Break
+    }
+
+    # Test of de mockup files bestaan en maak een .ZIP file aan
     If ((Test-Path -Path "$Pad\Mockups") -and ((Get-ChildItem -Path "$Pad\Mockups" -ErrorAction SilentlyContinue).Count -ge 1))
     {
-        Get-ChildItem -Path "$Pad\Mockups" | Compress-Archive -DestinationPath "$([Environment]::GetFolderPath("Desktop"))\Mockups.zip" -Force
-        Write-Host "Mockups gezipt: $([Environment]::GetFolderPath("Desktop"))\Mockups.zip" -ForegroundColor Green
+        # Maak de .ZIP file aan voor de mockup files
+        Get-ChildItem -Path "$Pad\Mockups" | Compress-Archive -DestinationPath "$TempMap\Mockups.zip" -Force
+        Write-Host "Mockups gezipt: $TempMap\Mockups.zip" -ForegroundColor Green
     }
     Else
     {
         Write-Host "Map bestond niet of was niet gevuld: $Pad\Mockups" -ForegroundColor Yellow
     }
+
+    # Start de verkenner en open de folder
+    explorer.exe "$TempMap"
 }
