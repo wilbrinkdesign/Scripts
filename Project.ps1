@@ -8,7 +8,7 @@
     .NOTES
     Author:   Mark Wilbrink
     Created:  16-1-2022
-    Modified: 31-1-2022
+    Modified: 1-2-2022
 #>
 
 # Globale vars die je in elke functie kunt aanroepen
@@ -30,33 +30,49 @@ Function Project-Start
     }
 
     # We hebben verschillende projecten, kies hier het type
-    Do { $SoortProject = Read-Host "Wordt dit een Logo project of een Website project? Kies: Logo / Website" } While ( $SoortProject -notmatch "Logo|Website" )
-    Write-Host ""    
+    Write-Host "1. Logo" -ForegroundColor Yellow
+    Write-Host "2. Website" -ForegroundColor Yellow
+    Write-Host ""
+    Do { $SoortProject = Read-Host "Wordt dit een Logo project of een Website project?" } While ( $SoortProject -notmatch "^[1-2]$" )
+    $SoortProject = If ($SoortProject -eq 1) { "Logo" } ElseIf ($SoortProject -eq 2) { "Website" } 
+
+    Clear-Host
 
     # Naam van het project, dit wordt ook de folder naam
     Do { $ProjectNaam = Read-Host "Geef de naam van het project" } While ( $ProjectNaam -eq "" )
-    Write-Host ""
+
+    Clear-Host
 
     # Controleren of het project niet al eens eerder is aangemaakt
     If ((Test-Path -Path "$PadProjecten\$ProjectNaam" -ErrorAction SilentlyContinue))
     {
         Write-Host "Project folder bestaat al: $PadProjecten\$ProjectNaam" -ForegroundColor Red
         Write-Host ""
-        Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "Ja|Nee")
+        Write-Host "1. Ja" -ForegroundColor Yellow
+        Write-Host "2. Nee" -ForegroundColor Yellow
         Write-Host ""
+        Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "^[1-2]$")
+        $Doorgaan = If ($Doorgaan -eq 1) { "Ja" } ElseIf ($Doorgaan -eq 2) { "Nee" } 
 
         If ($Doorgaan -eq "Nee")
         {
             Break
         }
+
+        Clear-Host
     }
 
     # Logo en website zaken in orde maken
     If ($SoortProject -eq "Logo")
     {
         # Taal van het project i.v.m. de logo handleiding
-        Do { $Taal = Read-Host "Wat wordt de taal van het project? Kies: nl / en" } While ( $Taal -notmatch "nl|en" )
+        Write-Host "1. Nederlands" -ForegroundColor Yellow
+        Write-Host "2. Engels" -ForegroundColor Yellow
         Write-Host ""
+        Do { $Taal = Read-Host "Wat wordt de taal van het project? Kies: nl / en" } While ( $Taal -notmatch "^[1-2]$" )
+        $Taal = If ($Taal -eq 1) { "nl" } ElseIf ($Taal -eq 2) { "en" } 
+
+        Clear-Host
 
         # Verschillende extensies die we gebruiken om de folders mee aan te maken
         $Extensies = @("AI", "EPS", "PDF", "SVG", "PNG", "JPEG")
@@ -82,13 +98,18 @@ Function Project-Start
             {
                 Write-Host "Handleiding niet gevonden: $PadLogoGuide" -ForegroundColor Red
                 Write-Host ""
-                Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "Ja|Nee")
+                Write-Host "1. Ja" -ForegroundColor Yellow
+                Write-Host "2. Nee" -ForegroundColor Yellow
                 Write-Host ""
+                Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "^[1-2]$")
+                $Doorgaan = If ($Doorgaan -eq 1) { "Ja" } ElseIf ($Doorgaan -eq 2) { "Nee" } 
 
                 If ($Doorgaan -eq "Nee")
                 {
                     Break
                 }
+
+                Clear-Host
             }
             Else
             {
@@ -103,13 +124,18 @@ Function Project-Start
             {
                 Write-Host "Handleiding niet gevonden: $PadLogoGids" -ForegroundColor Red
                 Write-Host ""
-                Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "Ja|Nee")
+                Write-Host "1. Ja" -ForegroundColor Yellow
+                Write-Host "2. Nee" -ForegroundColor Yellow
                 Write-Host ""
+                Do { $Doorgaan = Read-Host "Doorgaan?" } While ($Doorgaan -notmatch "^[1-2]$")
+                $Doorgaan = If ($Doorgaan -eq 1) { "Ja" } ElseIf ($Doorgaan -eq 2) { "Nee" } 
 
                 If ($Doorgaan -eq "Nee")
                 {
                     Break
                 }
+
+                Clear-Host
             }
             Else
             {
@@ -175,6 +201,8 @@ Function Project-CopyFiles
     }
     While (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
 
+    Clear-Host
+
     # De verschillende extensies en paden die horen bij de verschillende kleurmodussen
     $ExtensiesEnPaden = @{
         "AI" = "$Pad\Logo\Files\AI"
@@ -231,8 +259,16 @@ Function Project-RenameFiles
     }
     While (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
 
-    Do { $KleurModus = Read-Host "Is dit een CMYK + RGB of een RGB only project? Kies: CMYK / RGB" } While ( $KleurModus -notmatch "CMYK|RGB" )
+    Clear-Host
+
+    # Kies of dit een CMYK + RGB project is of alleen een RGB project
+    Write-Host "1. CMYK + RGB" -ForegroundColor Yellow
+    Write-Host "2. RGB only" -ForegroundColor Yellow
     Write-Host ""
+    Do { $KleurModus = Read-Host "Is dit een CMYK + RGB of een RGB only project?" } While ( $KleurModus -notmatch "^[1-2]$" )
+    $KleurModus = If ($KleurModus -eq 1) { "CMYK" } ElseIf ($KleurModus -eq 2) { "RGB" } 
+
+    Clear-Host
 
     # De verschillende extensies en de kleurmodus die erbij hoort
     $ExtensiesCMYK = "AI|EPS|PDF"
@@ -262,7 +298,7 @@ Function Project-RenameFiles
     }
     Else
     {
-        Write-Host "Print files: De bestanden zijn niet gevonden of de bestanden waren al hernoemd" -ForegroundColor Yellow
+        Write-Host "Print files: Deze bestanden zijn overgeslagen" -ForegroundColor Yellow
     }
 
     # Hernoem de RGB bestanden, sloop de prefix eraf en plaats er een suffix op
@@ -277,7 +313,7 @@ Function Project-RenameFiles
     }
     Else
     {
-        Write-Host "Digital files: De bestanden zijn niet gevonden of de bestanden waren al hernoemd" -ForegroundColor Yellow
+        Write-Host "Digital files: Deze bestanden zijn overgeslagen" -ForegroundColor Yellow
     }
 
     # Start de verkenner en open het project
@@ -309,47 +345,57 @@ Function Project-Zip
     }
     While (!(Test-Path -Path $Pad -ErrorAction SilentlyContinue))
 
+    Clear-Host
+
+    # We hebben verschillende projecten, kies hier het type
+    Write-Host "1. Logo" -ForegroundColor Yellow
+    Write-Host "2. Website" -ForegroundColor Yellow
+    Write-Host ""
+    Do { $SoortProject = Read-Host "Wil je een Logo project of een Website project zippen?" } While ( $SoortProject -notmatch "^[1-2]$" )
+    $SoortProject = If ($SoortProject -eq 1) { "Logo" } ElseIf ($SoortProject -eq 2) { "Website" } 
+    
+    Clear-Host
+
     # Tijdelijke folder aanmaken
     $TempMap = New-Item -Path "$([Environment]::GetFolderPath("Desktop"))\$(Get-Random)" -ItemType "directory"
 
-    # Test of de logo files bestaan en maak de .ZIP files aan
-    If ((Test-Path -Path "$Pad\Logo\Files"))
+    If ($SoortProject -eq "Logo")
     {
-        # De verschillende .ZIP files met de bijbehorende mappen
-        $WorkFiles = "SVG|PNG|JPEG"
-        $SourceFiles = "AI|EPS|PDF"
+        # Test of de logo files bestaan en maak de .ZIP files aan
+        If ((Test-Path -Path "$Pad\Logo\Files") -and ((Get-ChildItem -Path "$Pad\Logo\Files" -ErrorAction SilentlyContinue).Count -ge 1))
+        {
+            # De verschillende .ZIP files met de bijbehorende mappen
+            $WorkFiles = "SVG|PNG|JPEG"
+            $SourceFiles = "AI|EPS|PDF"
 
-        # Maak de .ZIP files aan voor Work files en Source files
-        Copy-Item -Path "$Pad\Logo\Files\" -Destination "$(($TempMap).FullName)\Logo\" -Recurse
+            # Maak de .ZIP file aan voor Work files
+            Get-ChildItem -Path "$Pad\Logo\Files" -Directory | where { $_.FullName -match $WorkFiles } | Compress-Archive -DestinationPath "$TempMap\Work files.zip" -Force
+            Write-Host "Work files gezipt: $TempMap\Work files.zip" -ForegroundColor Green
 
-        # Maak de .ZIP file aan voor Work files
-        Get-ChildItem "$TempMap\Logo" -Directory | where { $_.FullName -match $WorkFiles } | Compress-Archive -DestinationPath "$TempMap\Logo\Work files.zip" -Force
-        Write-Host "Work files gezipt: $TempMap\Logo\Work files.zip" -ForegroundColor Green
-
-        # Maak de .ZIP file aan voor Source files
-        Get-ChildItem "$TempMap\Logo" -Directory | where { $_.FullName -match $SourceFiles } | Compress-Archive -DestinationPath "$TempMap\Logo\Source files.zip" -Force
-        Write-Host "Source files gezipt: $TempMap\Logo\Source files.zip" -ForegroundColor Green
+            # Maak de .ZIP file aan voor Source files
+            Get-ChildItem -Path "$Pad\Logo\Files" -Directory | where { $_.FullName -match $SourceFiles } | Compress-Archive -DestinationPath "$TempMap\Source files.zip" -Force
+            Write-Host "Source files gezipt: $TempMap\Source files.zip" -ForegroundColor Green
+        }
+        Else
+        {
+            Write-Host "Logo map bestond niet of was niet gevuld: $Pad\Logo\Files" -ForegroundColor Yellow
+            Break
+        }
     }
-    Else
+    ElseIf ($SoortProject -eq "Website")
     {
-        Write-Host "Logo files bestaan niet: $Pad\Logo\Files" -ForegroundColor Yellow
-        Break
-    }
-
-    # Test of de website files bestaan en maak een .ZIP file aan
-    If ((Test-Path -Path "$Pad\Website"))
-    {
-        # Maak de folder voor de website files
-        New-Item -Path "$TempMap\Website" -ItemType "directory"
-
-        # Maak de .ZIP file aan voor Source files
-        Get-ChildItem -Path "$Pad\Website" | Compress-Archive -DestinationPath "$TempMap\Website\Source files.zip" -Force
-        Write-Host "Source files gezipt: $TempMap\Source files.zip" -ForegroundColor Green
-    }
-    Else
-    {
-        Write-Host "Website files bestaan niet: $Pad\Website" -ForegroundColor Yellow
-        Break
+        # Test of de website files bestaan en maak een .ZIP file aan
+        If ((Test-Path -Path "$Pad\Website") -and ((Get-ChildItem -Path "$Pad\Website" -ErrorAction SilentlyContinue).Count -ge 1))
+        {
+            # Maak de .ZIP file aan voor Source files
+            Get-ChildItem -Path "$Pad\Website" | Compress-Archive -DestinationPath "$TempMap\Source files.zip" -Force
+            Write-Host "Source files gezipt: $TempMap\Source files.zip" -ForegroundColor Green
+        }
+        Else
+        {
+            Write-Host "Website map bestond niet of was niet gevuld: $Pad\Website" -ForegroundColor Yellow
+            Break
+        }
     }
 
     # Test of de mockup files bestaan en maak een .ZIP file aan
@@ -358,10 +404,14 @@ Function Project-Zip
         # Maak de .ZIP file aan voor de mockup files
         Get-ChildItem -Path "$Pad\Mockups" | Compress-Archive -DestinationPath "$TempMap\Mockups.zip" -Force
         Write-Host "Mockups gezipt: $TempMap\Mockups.zip" -ForegroundColor Green
+
+        # Kopieer de mockup files los
+        Copy-Item -Path "$Pad\Mockups\*" -Destination "$(($TempMap).FullName)" -Recurse
+        Write-Host "Mockup files gekopieerd: $TempMap" -ForegroundColor Green
     }
     Else
     {
-        Write-Host "Map bestond niet of was niet gevuld: $Pad\Mockups" -ForegroundColor Yellow
+        Write-Host "Mockup map bestond niet of was niet gevuld: $Pad\Mockups" -ForegroundColor Yellow
     }
 
     # Start de verkenner en open de folder
