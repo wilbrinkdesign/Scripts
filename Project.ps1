@@ -8,19 +8,19 @@
     .NOTES
     Author:   Mark Wilbrink
     Created:  16-1-2022
-    Modified: 1-2-2022
+    Modified: 2-2-2022
 #>
 
 # Globale vars die je in elke functie kunt aanroepen
-$global:PadProjecten = "D:\OneDrive\Wilbrink Design\Projects"
+$global:PadProjecten = "C:\OneDrive\Wilbrink Design\Projects"
 
 Function Project-Start
 {
     Clear-Host
 
     # Paden handleidingen
-    $PadLogoGuide = "D:\OneDrive\Wilbrink Design\Documents\Logo guide.pdf"
-    $PadLogoGids = "D:\OneDrive\Wilbrink Design\Documents\Logo gids.pdf"
+    $PadLogoGuide = "C:\OneDrive\Wilbrink Design\Documents\Logo guide.pdf"
+    $PadLogoGids = "C:\OneDrive\Wilbrink Design\Documents\Logo gids.pdf"
 
     # Controleren of het projecten pad uberhaupt bestaat, anders dit script niet verder starten
     If (!(Test-Path -Path $PadProjecten -ErrorAction SilentlyContinue))
@@ -365,15 +365,15 @@ Function Project-Zip
         If ((Test-Path -Path "$Pad\Logo\Files") -and ((Get-ChildItem -Path "$Pad\Logo\Files" -ErrorAction SilentlyContinue).Count -ge 1))
         {
             # De verschillende .ZIP files met de bijbehorende mappen
-            $WorkFiles = "SVG|PNG|JPEG"
-            $SourceFiles = "AI|EPS|PDF"
+            $WorkFiles = "PNG|JPEG"
+            $SourceFiles = "AI|EPS|PDF|SVG"
 
             # Maak de .ZIP file aan voor Work files
             Get-ChildItem -Path "$Pad\Logo\Files" -Directory | where { $_.FullName -match $WorkFiles } | Compress-Archive -DestinationPath "$TempMap\Work files.zip" -Force
             Write-Host "Work files gezipt: $TempMap\Work files.zip" -ForegroundColor Green
 
             # Maak de .ZIP file aan voor Source files
-            Get-ChildItem -Path "$Pad\Logo\Files" -Directory | where { $_.FullName -match $SourceFiles } | Compress-Archive -DestinationPath "$TempMap\Source files.zip" -Force
+            Get-ChildItem -Path "$Pad\Logo\Files" | where { $_.Name -match "^($SourceFiles)$" -or $_.Name -match "pdf$" } | Compress-Archive -DestinationPath "$TempMap\Source files.zip" -Force
             Write-Host "Source files gezipt: $TempMap\Source files.zip" -ForegroundColor Green
         }
         Else
