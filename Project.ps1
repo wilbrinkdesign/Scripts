@@ -375,6 +375,10 @@ Function Project-Zip
             # Maak de .ZIP file aan voor Source files
             Get-ChildItem -Path "$Pad\Logo\Files" | where { $_.Name -match "^($SourceFiles)$" -or $_.Name -match "pdf$" } | Compress-Archive -DestinationPath "$TempMap\Source files.zip" -Force
             Write-Host "Source files gezipt: $TempMap\Source files.zip" -ForegroundColor Green
+
+            # Maak de .ZIP file aan van het hele logo pakket
+            Get-ChildItem -Path "$Pad\Logo\Files" | Compress-Archive -DestinationPath "$TempMap\All files.zip" -Force
+            Write-Host "Source files gezipt: $TempMap\All files.zip" -ForegroundColor Green
         }
         Else
         {
