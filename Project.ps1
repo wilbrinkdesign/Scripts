@@ -8,7 +8,7 @@
     .NOTES
     Author:   Mark Wilbrink
     Created:  16-1-2022
-    Modified: 2-2-2022
+    Modified: 17-2-2022
 #>
 
 # Globale vars die je in elke functie kunt aanroepen
