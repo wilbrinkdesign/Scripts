@@ -12,15 +12,15 @@
 #>
 
 # Globale vars die je in elke functie kunt aanroepen
-$global:PadProjecten = "D:\OneDrive\Wilbrink Design\Projects"
+$global:PadProjecten = "C:\Users\markw\OneDrive\Wilbrink Design\Projects"
 
 Function Project-Start
 {
     Clear-Host
 
     # Paden handleidingen
-    $PadLogoGuide = "D:\OneDrive\Wilbrink Design\Documents\Logo guide.pdf"
-    $PadLogoGids = "D:\OneDrive\Wilbrink Design\Documents\Logo gids.pdf"
+    $PadLogoGuide = "C:\Users\markw\OneDrive\Wilbrink Design\Documents\Logo guide.pdf"
+    $PadLogoGids = "C:\Users\markw\OneDrive\Wilbrink Design\Documents\Logo gids.pdf"
 
     # Controleren of het projecten pad uberhaupt bestaat, anders dit script niet verder starten
     If (!(Test-Path -Path $PadProjecten -ErrorAction SilentlyContinue))
