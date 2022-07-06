@@ -1,2 +1,5 @@
 # Herstel punten (vorige versies / previous versions) inschakelen en daarna in task schedular onderstaand cmd opnemen
 wmic shadowcopy call create ClientAccessible,"D:\"
+
+# Enable System Protection on Drive
+rstrui.exe /offline:C:\windows=active
