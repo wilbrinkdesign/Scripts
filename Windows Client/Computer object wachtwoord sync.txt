@@ -1,0 +1,2 @@
+# Stop de sync tussen de AD en het computer object
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange => 1
