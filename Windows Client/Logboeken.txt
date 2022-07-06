@@ -1,4 +1,4 @@
-# Zoeken in de Logboeken van Windows
+# Zoeken in de Logboeken (event log) van Windows
 Get-WinEvent -LogName application | Where {$_.message -like '*F-Secur*'}
 Get-Eventlog -LogName Application -Source Logboek1 | Where {$_.message -like "*username:*"}
 Get-Eventlog -LogName Security -Source Microsoft-Windows-Security-Auditing | Where {$_.message -like "*username*"}
