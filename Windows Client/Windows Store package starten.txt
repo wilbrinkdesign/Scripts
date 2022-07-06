@@ -5,3 +5,10 @@ Opzet: <friendly_product_name>!<id> => <Windows_dir_plus_cijfers_einde>!<Applica
 Voorbeeld: 
 Dir: C:\Program Files\windowsapps\Microsoft.MicrosoftPowerBIDesktop_2.104.941.0_x64__8wekyb3d8bbwe
 Code: Microsoft.MicrosoftPowerBIDesktop_8wekyb3d8bbwe!Microsoft.MicrosoftPowerBIDesktop
+
+# Extra uitleg
+
+1. Get-AppxPackage -Name "*<app>*"
+2. shell:AppsFolder => Maak snelkoppeling en check eigenschappen
+3a. C:\Program Files\WindowsApps\<packagefamilyname>\AppXManifest.xml
+3b.	Check de executable, de Id moet achter het pakket komen: <packagefamilyname>!<id>
