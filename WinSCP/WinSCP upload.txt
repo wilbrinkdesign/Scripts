@@ -1,0 +1,12 @@
+# FTP bestand naar een website. Let op! Er mogen geen spaties in zitten, vandaar dat de > tekens direct achter de echo komt.
+
+echo username> list_films.scr
+echo password>> list_films.scr
+echo cd /public/sites/dvdcollectie.wilbrinkdesign.com>> list_films.scr
+echo put filmlijst.txt>> list_films.scr
+echo bye>> list_films.scr
+ftp -s:"list_films.scr" ftp.wilbrinkdesign.com
+del filmlijst.txt
+del list_films.scr
+
+"C:\Program Files (x86)\WinSCP\WinSCP.exe" /log="file.log" /command "open sftp://username:wachtwoord@hostname/var/www/images/" "mput \\srv01\fotos$\*.*" "exit"
