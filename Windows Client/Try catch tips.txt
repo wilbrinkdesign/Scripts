@@ -1,0 +1,21 @@
+Dit zorgt voor een foutmelding omdat de eerste zin incorrect is, na de eerste fout wordt het script gestopt:
+try {
+    OnzinFunctieZorgtVoorFout
+    write-host "jaaaaaaaa" -ForegroundColor DarkYellow
+}
+catch {
+    write-host $_ -ForegroundColor DarkYellow
+}
+
+do {
+    try {
+        Get-ChildItem c:\windows2 -ErrorAction Stop
+        Get-ChildItem c:\windows
+        $err = $false
+    }
+    catch {
+        echo error
+        $err = $true
+        sleep -s 2
+    }
+} while ($err -eq $true)
