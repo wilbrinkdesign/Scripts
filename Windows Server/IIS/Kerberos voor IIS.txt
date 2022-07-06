@@ -1,0 +1,6 @@
+Windows authentication aan en anonymous authentication uit
+Negotiate bovenaan
+setspn -a HTTP/<servername+fqdn> <domain>\<user>
+system.wevServer/security/authentication/WindowsAuthentication => useKernelMode (True) + useAppPoolCredentials (True)
+Application pool credentials <domain>\<user>
+AD user Delegation tab => Trust this user for delegation to any service (Kerberos only)
