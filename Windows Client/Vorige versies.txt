@@ -1,0 +1,2 @@
+# Herstel punten (vorige versies) inschakelen en daarna in task schedular onderstaand cmd opnemen
+wmic shadowcopy call create ClientAccessible,"D:\"
