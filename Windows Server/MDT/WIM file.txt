@@ -1,0 +1,5 @@
+# Vraag alle versies van de ISO
+dism /Get-WimInfo /WimFile:install.wim
+
+# Maak een export van de ISO
+dism /export-image /SourceImageFile:D:\sources\sxs\install.wim /SourceIndex:5 /DestinationImageFile:C:\Temp\install.wim /Compress:max /CheckIntegrity
