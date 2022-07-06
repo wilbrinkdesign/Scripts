@@ -1,0 +1,2 @@
+# Import een SQL bestand in een bestaande database
+mysql -u root -p database_name < file.sql
