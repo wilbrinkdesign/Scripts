@@ -12,7 +12,7 @@
 #>
 
 # Globale vars die je in elke functie kunt aanroepen
-$global:PadProjecten = "$($env:OneDrive)\Wilbrink Design\Projects\"
+$global:PadProjecten = "$($env:OneDrive)\Wilbrink Design\Projects"
 
 Function Project-Start
 {
