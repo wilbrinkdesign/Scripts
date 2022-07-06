@@ -1,0 +1,45 @@
+Advanced features:
+[cmdletbinding(SupportsShouldProcess,
+HelpUri="https://help.nl")]
+
+Confirm optioneel/verplicht: 
+$ConfirmPreference = "Low"
+Set-FileContent file1 -Confirm:$False
+
+Confirm optioneel:
+Function Set-FileContent {
+    [cmdletbinding(SupportsShouldProcess)]
+    Param(
+        [Parameter(Mandatory=$True)][string]$File1, # Verplichte invoer
+        [string]$File2 # Geen verplichte invoer
+    )
+
+    if ($PSCmdlet.ShouldProcess("The Item" , "The Change")) # WhatIf
+    {
+        echo whatif # -WhatIf parameter, dan voer je deze regel niet uit maar kijk je wat er gaat gebeuren
+    }
+}
+
+Set-FileContent file1 -WhatIf -Confirm
+Set-FileContent file1 -Confirm (Geen whatif? Dan wordt alles uitgevoerd in ShouldProcess)
+
+Confirm verplicht:
+Function Set-FileContent {
+    [cmdletbinding(SupportsShouldProcess)]
+    Param(
+        [Parameter(Mandatory=$True)][string]$File1, # Verplichte invoer
+        [string]$File2 # Geen verplichte invoer
+    )
+
+    if ($PSCmdlet.ShouldProcess("The Item" , "The Change")) # WhatIf
+    {
+        echo whatif # -WhatIf parameter, dan voer je deze regel niet uit maar kijk je wat er gaat gebeuren
+    }
+
+    If ($PSCmdlet.ShouldContinue("Are you sure that you know what you are doing?","Delete with -Force parameter!")) # Confirm
+    { 
+        echo confirm # Alles waarvan je niet zeker weet dat het meteen uitgevoerd mag worden, plaats het in deze If statement
+    }
+}
+
+Set-FileContent file1
