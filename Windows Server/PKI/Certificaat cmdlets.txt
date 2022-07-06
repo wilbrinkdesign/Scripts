@@ -1,0 +1,5 @@
+# Toevoegen
+certutil -addstore -enterprise -f -v root ROOT_CERT.crt
+
+# Verwijderen
+certutil -deleterow <ID> Request
