@@ -1,0 +1,6 @@
+manage-bde -protectors -delete c:
+manage-bde -protectors -add c: -recoverypassword
+$pin = ConvertTo-SecureString "1234" -AsPlainText -Force
+Enable-BitLocker -MountPoint "C:" -EncryptionMethod Aes256 -UsedSpaceOnly -Pin $pin -TPMandPinProtector
+
+cmd /c Powershell.exe -ExecutionPolicy Bypass -Command "Enable-BitLocker -MountPoint C: -EncryptionMethod Aes256 -UsedSpaceOnly -Pin (ConvertTo-SecureString 1234 -AsPlainText -Force) -TPMandPinProtector"
