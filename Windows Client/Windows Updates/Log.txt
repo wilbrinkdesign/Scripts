@@ -1,0 +1,2 @@
+# Uitlezen Windows Updates Log
+Get-WindowsUpdateLog
