@@ -1,2 +1,0 @@
-# Vraag expiration date op (uitdienstdatum)
-Get-ADUser -Properties sn, AccountExpirationDate -Filter * -SearchBase "OU=Container1,DC=domein,DC=test,DC=lan" | fl sn,samaccountname,@{Name='AccountExpiration'; Expression={if($null -eq $_.AccountExpirationDate){'Never Expires'}else{$_.AccountExpirationDate}}}
