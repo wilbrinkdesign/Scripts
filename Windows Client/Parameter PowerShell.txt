@@ -1,0 +1,2 @@
+# Parameter meegeven en checken of hij bestaat
+$manager = @{ Manager = $ad_manager } 
