@@ -1,3 +1,8 @@
+# Normale manier
+sfc /scannow
+dism /Online /Cleanup-image /Restorehealth
+
+# Dirty manier
 net stop bits
 net stop wuauserv
 net stop appidsvc
