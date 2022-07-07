@@ -11,3 +11,6 @@ Get-ADUser -Filter {department -like "Afdeling1"} | Foreach-object { Set-ADUser 
 
 # 06 van het ene veld naar het andere veld 
 Get-ADUser -Properties * -Filter {mobile -notlike "*" -and postalcode -like "*"} -SearchBase "OU=Container1,DC=domein,DC=test,DC=lan" | Foreach-object { Set-ADUser -Identity $_.SamAccountName -Replace @{mobile = $_.postalcode} } 
+
+# Manager aanpassen
+Get-ADUser -Properties manager, mail -Filter * -SearchBase "OU=Container1,DC=domein,DC=test,DC=lan" | where {$_.manager -like "" -and $_.mail -like "*@domein.nl"} | Set-ADUser -Manager "HBakker" 
