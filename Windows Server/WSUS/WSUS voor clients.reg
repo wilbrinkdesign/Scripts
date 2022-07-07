@@ -1,0 +1,23 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate]
+"ElevateNonAdmins"=dword:00000000
+"TargetGroupEnabled"=dword:00000001
+"TargetGroup"="FAT"
+"WUServer"="http://wsussrv01.ssc.vsws.lan:8530"
+"WUStatusServer"="http://wsussrv01.ssc.vsws.lan:8530"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU]
+"NoAutoUpdate"=dword:00000000
+"AUOptions"=dword:00000003
+"ScheduledInstallDay"=dword:00000000
+"ScheduledInstallTime"=dword:00000003
+"DetectionFrequencyEnabled"=dword:00000001
+"DetectionFrequency"=dword:0000000a
+"EnableFeaturedSoftware"=dword:00000000
+"AutoInstallMinorUpdates"=dword:00000000
+"IncludeRecommendedUpdates"=dword:00000001
+"NoAutoRebootWithLoggedOnUsers"=dword:00000001
+"RebootRelaunchTimeoutEnabled"=dword:00000001
+"RebootRelaunchTimeout"=dword:0000000a
+"UseWUServer"=dword:00000001
