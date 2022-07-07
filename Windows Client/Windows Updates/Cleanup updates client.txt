@@ -1,0 +1,9 @@
+CLEANUP IF INSTALLED LANGER DAN 30 DAGEN
+dism /online /Cleanup-Image /StartComponentCleanup
+
+SUPERSEDED DELETE EN JE KUNT NIET MEER TERUG NAAR BEPAALDE SERVICE PACKS EN UPDATES NIET DEINSTALLEREN
+dism /online /Cleanup-Image /StartComponentCleanup /ResetBase
+DISM /online /Cleanup-Image /SpSuperseded
+
+FIX WINDOWS UPDATE CORRUPTIONS
+DISM.exe /Online /Cleanup-image /Restorehealth
