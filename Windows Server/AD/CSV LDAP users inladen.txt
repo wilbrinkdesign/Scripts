@@ -1,0 +1,6 @@
+# CSV
+Naam, Email 
+HBakker,HBakker@live.nl
+
+# Command
+Import-Csv 'C:\Temp\Users.csv' | ForEach-Object -Process { Write-Host $_.Naam } 
