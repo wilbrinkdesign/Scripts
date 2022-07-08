@@ -4,13 +4,16 @@ Update-Module Microsoft.Online.SharePoint.PowerShell
 
 # Azure Online
 Install-Module MSOnline
+Update-Module MSOnline
+Install-Module AzureAD
+Update-Module AzureAD
 
 # Exchange Online
 Install-Module PowershellGet
-Install-Module -Name ExchangeOnlineManagement
-Update-Module -Name ExchangeOnlineManagement
+Install-Module ExchangeOnlineManagement
+Update-Module ExchangeOnlineManagement
 
 # Teams Online
-Install-Module -Name MicrosoftTeams
+Install-Module MicrosoftTeams
 Install-Module MicrosoftTeams -Repository PSGallery
 Update-Module MicrosoftTeams
