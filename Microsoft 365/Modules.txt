@@ -13,3 +13,4 @@ Update-Module -Name ExchangeOnlineManagement
 # Teams Online
 Install-Module -Name MicrosoftTeams
 Install-Module MicrosoftTeams -Repository PSGallery
+Update-Module MicrosoftTeams
