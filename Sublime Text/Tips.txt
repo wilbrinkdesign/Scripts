@@ -1,4 +1,7 @@
-Alles selecteren: CTRL + A => CTRL + SHIFT + L
+Alles selecteren: CTRL+A
+Alles selecteren zonder aanknopingspunt: CTRL+SHIFT+L
+Alle gevonden zaken selecteren: ALT+F3
+Word wrap: View => Word Wrap
 Encoding: Sublime => Preferences => Settings "show_encoding" : true (File => Save with encoding)
 Sorteren: F9
 Unieke records: Edit => Permute lines => Unique
