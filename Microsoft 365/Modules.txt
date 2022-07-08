@@ -1,3 +1,6 @@
+# Vraag alle modules op
+Get-InstalledModule
+
 # SharePoint Online
 Install-Module Microsoft.Online.SharePoint.PowerShell
 Update-Module Microsoft.Online.SharePoint.PowerShell
