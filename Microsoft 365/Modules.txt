@@ -1,0 +1,15 @@
+# SharePoint Online
+Install-Module Microsoft.Online.SharePoint.PowerShell
+Update-Module Microsoft.Online.SharePoint.PowerShell
+
+# Azure Online
+Install-Module MSOnline
+
+# Exchange Online
+Install-Module PowershellGet
+Install-Module -Name ExchangeOnlineManagement
+Update-Module -Name ExchangeOnlineManagement
+
+# Teams Online
+Install-Module -Name MicrosoftTeams
+Install-Module MicrosoftTeams -Repository PSGallery
