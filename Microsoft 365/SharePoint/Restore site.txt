@@ -1,0 +1,7 @@
+Get-SPODeletedSite -IncludeOnlyPersonalSite | FT url
+Restore-SPODeletedSite -Identity [URL]
+Set-SPOUser -Site [URL] -LoginName [ADMINEMAIL] -IsSiteCollectionAdmin $true
+
+Bron: https://docs.microsoft.com/en-us/onedrive/restore-deleted-onedrive
+
+Hierna OneDrive weer moven naar de prullenbak: Remove-SPOSite -Identity [URL]
