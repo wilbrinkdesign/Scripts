@@ -1,0 +1,2 @@
+# Check de status van de Windows client of deze Azure joined is, een token heeft gehad, etc
+dsregcmd /status
