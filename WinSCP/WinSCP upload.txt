@@ -2,10 +2,10 @@
 
 echo username> list_films.scr
 echo password>> list_films.scr
-echo cd /public/sites/dvdcollectie.wilbrinkdesign.com>> list_films.scr
+echo cd /public/sites/dvdcollectie>> list_films.scr
 echo put filmlijst.txt>> list_films.scr
 echo bye>> list_films.scr
-ftp -s:"list_films.scr" ftp.wilbrinkdesign.com
+ftp -s:"list_films.scr" ftp.host.com
 del filmlijst.txt
 del list_films.scr
 
