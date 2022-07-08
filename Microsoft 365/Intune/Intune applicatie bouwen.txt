@@ -1,2 +1,2 @@
-1. Prep tool: https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool
+1. Microsoft Win32 Content Prep Tool: https://github.com/Microsoft/Microsoft-Win32-Content-Prep-Tool
 2. IntuneWinAppUtil -c C:\Install\Setup -s Install.cmd -o C:\Install\Package <-q>
