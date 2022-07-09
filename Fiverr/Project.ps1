@@ -283,7 +283,7 @@ Function Project-RenameFiles
     ElseIf ($KleurModus -eq "RGB")
     {
         # Vraag alle files op in alleen de sub folders
-        $RGB = Get-ChildItem $Pad\Logo\Files\*\* | where { $_.GetType().Name -eq "FileInfo" -and $_.FullName -notlike "*-rgb*" }
+        $RGB = Get-ChildItem $Pad\Logo\Files\*\* | where { $_.GetType().Name -eq "FileInfo" -and $_.FullName -match $ExtensiesRGB -and $_.FullName -notlike "*-rgb*" }
     }
 
     # Hernoem de CMYK bestanden, sloop de prefix eraf en plaats er een suffix op
