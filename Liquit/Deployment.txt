@@ -1,0 +1,90 @@
+Echo Deployment Agent.xml kopieren
+mkdir "C:\Program Files (x86)\Liquit Workspace\Agent"
+copy /Y Agent1.xml "C:\Program Files (x86)\Liquit Workspace\Agent\Agent.xml"
+
+Echo Liquit installeren (en oude Liquit eventueel verwijderen zodat je dit script met de hand ook kunt starten mocht het fout gaan)
+msiexec.exe /x Agent.msi /qn
+msiexec.exe /i Agent.msi /qn DEPLOYMENT=1
+"%ProgramFiles(x86)%\Liquit Workspace\Agent\shellapi.exe" deployment run
+
+Echo Normale Agent.xml kopieren
+copy /Y Agent2.xml "C:\Program Files (x86)\Liquit Workspace\Agent\Agent.xml"
+
+############## Deployment Agent.xml ############## 
+<?xml version="1.0" encoding="utf-8"?>
+<Config>
+  <Server>https://liquit.cloud</Server>
+  <CustomServer>False</CustomServer>
+  <Register>
+    <Type>1</Type>
+    <Username><![CDATA[LOCAL\user]]></Username>
+    <Password>password</Password>
+  </Register>
+  <Deployment>
+    <Enabled>True</Enabled>
+    <Start>False</Start>
+    <Cancel>True</Cancel>
+    <AutoStart>
+      <Enabled>True</Enabled>
+      <Timer>10</Timer>
+    <Deployment>Hybride Standaard</Deployment>
+    </AutoStart>
+  </Deployment>
+  <Log Id="agent">
+    <Level>Debug</Level>
+  </Log>
+  <Log Id="userhost">
+    <Level>Debug</Level>
+  </Log>
+  <Content>
+    <Hash>True</Hash>
+  </Content>
+  <Login>
+    <Enabled>True</Enabled>
+    <SSO>True</SSO>
+  </Login>
+  <Icon>
+    <Exit>False</Exit>
+  </Icon>
+  <Launcher>
+    <State>2</State>
+    <Close>False</Close>
+    <Start>True</Start>
+    <Minimal>False</Minimal>
+    <Enabled>True</Enabled>
+    <StartConnected>True</StartConnected>
+  </Launcher>
+</Config>
+
+############## Productie Agent.xml ############## 
+
+<?xml version="1.0" encoding="utf-8"?>
+<Config>
+  <Server>https://liquit.cloud</Server>
+  <CustomServer>False</CustomServer>
+  <Log Id="agent">
+    <Level>Debug</Level>
+  </Log>
+  <Log Id="userhost">
+    <Level>Debug</Level>
+  </Log>
+  <Content>
+    <Hash>True</Hash>
+  </Content>
+  <Login>
+    <Enabled>True</Enabled>
+    <SSO>True</SSO>
+    <IdentitySource>AzureADNaamIdentity</IdentitySource>
+  </Login>
+  <Icon>
+    <Exit>False</Exit>
+  </Icon>
+  <Launcher>
+    <State>2</State>
+    <Close>False</Close>
+    <Start>True</Start>
+    <Minimal>False</Minimal>
+    <Enabled>True</Enabled>
+    <StartConnected>True</StartConnected>
+  </Launcher>
+</Config>
