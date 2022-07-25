@@ -27,7 +27,7 @@ copy /Y Agent2.xml "C:\Program Files (x86)\Liquit Workspace\Agent\Agent.xml"
     <AutoStart>
       <Enabled>True</Enabled>
       <Timer>10</Timer>
-    <Deployment>Hybride Standaard</Deployment>
+    <Deployment>Default deployment name</Deployment>
     </AutoStart>
   </Deployment>
   <Log Id="agent">
