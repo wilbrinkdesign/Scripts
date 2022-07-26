@@ -1,6 +1,6 @@
 <#
     .DESCRIPTION
-    Dit profile.ps1 script zorgt ervoor dat de functies die hieronder zijn geschreven, meteen beschikbaar
+    Dit Project.ps1 script zorgt ervoor dat de functies die hieronder zijn geschreven, meteen beschikbaar
     worden tijdens het opstarten van PowerShell. Op deze manier kun je gemakkelijk een logo of website
     project starten. Dit script maakt de mappenstructuur aan, hernoemd logo files, kopieert logo files en
     zipt uiteindelijk het hele project, zodat het in 1x door kan naar de klant.
@@ -8,7 +8,7 @@
     .NOTES
     Author:   Mark Wilbrink
     Created:  16-1-2022
-    Modified: 17-2-2022
+    Modified: 26-7-2022
 #>
 
 # Globale vars die je in elke functie kunt aanroepen
